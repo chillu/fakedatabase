@@ -36,7 +36,13 @@ class FakeDatabase {
 			throw new LogicException(sprintf('FakeDatabase at %s is not writeable'. $this->path));
 		}
 		$old = umask(0);
-		file_put_contents($this->path, json_encode($data, JSON_PRETTY_PRINT));
+
+		if(defined('JSON_PRETTY_PRINT')) {
+			file_put_contents($this->path, json_encode($data, JSON_PRETTY_PRINT));
+		} else {
+			file_put_contents($this->path, json_encode($data));
+		}
+
 		chmod($this->path, 0777);
 		umask($old);
 	}
