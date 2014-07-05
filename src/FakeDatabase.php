@@ -10,14 +10,22 @@
  */
 class FakeDatabase {
 
+	/**
+	 * @var String Absolute path to the database file
+	 */
 	protected $path;
 
+	/**
+	 * @param String $path Absolute path to the database file
+	 */
 	function __construct($path) {
 		$this->path = $path;
 	}
 
+	/**
+	 * @return array
+	 */
 	protected function getData() {
-
 		if(file_exists($this->path) && !is_readable($this->path)) {
 			throw new LogicException(sprintf('FakeDatabase at %s is not readable'. $this->path));
 		} 
@@ -28,9 +36,11 @@ class FakeDatabase {
 		} else {
 			return array();
 		}
-		
 	}
 
+	/**
+	 * @param array $data Data to be persisted on disk
+	 */
 	protected function setData($data) {
 		if(file_exists($this->path) && !is_writable($this->path)) {
 			throw new LogicException(sprintf('FakeDatabase at %s is not writeable'. $this->path));
@@ -51,6 +61,11 @@ class FakeDatabase {
 	 * Finds a record matching a certain key/value set
 	 * Not a terribly efficient implementation, since it retrieves all records from this type
 	 * and searches in memory. Supports nested keys through dot notation.
+	 *
+	 * @param String $type
+	 * @param String $key Supports dot notation
+	 * @param String Value
+	 * @return FakeObject
 	 */
 	public function find($type, $key, $value) {
 		$data = $this->getData();
@@ -88,6 +103,13 @@ class FakeDatabase {
 		return $return;
 	}
 
+	/**
+	 * Get a single record
+	 *
+	 * @param  String $type
+	 * @param  String $key
+	 * @return FakeObject
+	 */
 	public function get($type, $key) {
 		$data = $this->getData();
 		$return = (isset($data[$type][$key])) ? FakeObject::create_from_array($data[$type][$key]) : null;
@@ -102,6 +124,12 @@ class FakeDatabase {
 		return $return;
 	}
 
+	/**
+	 * Get all records of a certain type.
+	 *
+	 * @param String $type
+	 * @return Array of FakeObject records
+	 */
 	public function getAll($type) {
 		$data = $this->getData();
 		if(!isset($data[$type])) return false;
@@ -118,9 +146,9 @@ class FakeDatabase {
 	 * Sets a new record. Replaces existing records with the same key.
 	 * Use {@link update()} for updating existing records.
 	 * 
-	 * @param String     $type  
-	 * @param String     $key   	
-	 * @param FakeObject $obj  
+	 * @param String     $type
+	 * @param String     $key
+	 * @param FakeObject $obj
 	 */
 	public function set($type, $key, FakeObject $obj) {
 		$data = $this->getData();
@@ -143,9 +171,9 @@ class FakeDatabase {
 	 * Updates an existing record. Merges with existing data.
 	 * Use {@link set()} to unset values.
 	 * 
-	 * @param  String     $type  
-	 * @param  String     $key    
-	 * @param  FakeObject $obj   
+	 * @param  String     $type
+	 * @param  String     $key
+	 * @param  FakeObject $obj
 	 */
 	public function update($type, $key, FakeObject $obj) {
 		$existing = $this->get($type, $key);
@@ -175,16 +203,25 @@ class FakeDatabase {
 		$this->log('Reset');
 	}
 
+	/**
+	 * @return array
+	 */
 	public function toArray() {
 		return $this->getData();
 	}
 
+	/**
+	 * @return String Absolute path to the database file
+	 */
 	public function getPath() {
 		return $this->path;
 	}
 
+	/**
+	 * @param String $msg
+	 */
 	protected function log($msg) {
-		syslog(LOG_DEBUG, $msg);
+		SkinnyLog::log($msg, SkinnyLog::INFO);
 	}
 
 }
