@@ -1,5 +1,7 @@
 # Fake JSON Database
 
+[![Build Status](https://api.travis-ci.org/chillu/fakedatabase.png)](https://travis-ci.org/chillu/fakedatabase)
+
 ## Introduction
 
 Simple "database" storage adapter which persists into a JSON file, 
