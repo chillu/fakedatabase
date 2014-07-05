@@ -1,0 +1,24 @@
+{
+	"name" : "chillu/fakedatabase",
+	"description" : "Simple 'database' storage adapter which persists into a JSON file",
+	"license" : "BSD-2-Clause",
+	"keywords" : ["json","testing","database"],
+	"authors" : [
+		{
+			"name" : "Ingo Schommer",
+			"email" : "me@chillu.com",
+			"role" : "Developer"
+		}
+	],
+	"require-dev": {
+		"phpunit/phpunit": "3.7.*"
+	},
+	"support":{
+		"issues" : "https://github.com/chillu/fakedatabase/issues",
+		"source" : "https://github.com/chillu/fakedatabase",
+		"docs" : "https://github.com/chillu/fakedatabase"
+	},
+	"autoload": {
+        "psr-0": { "": "src/" }
+    }
+}
