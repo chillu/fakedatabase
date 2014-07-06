@@ -221,7 +221,7 @@ class FakeDatabase {
 	 * @param String $msg
 	 */
 	protected function log($msg) {
-		SkinnyLog::log($msg, SkinnyLog::INFO);
+		syslog(LOG_DEBUG, $msg);
 	}
 
 }
