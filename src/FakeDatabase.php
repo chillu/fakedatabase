@@ -10,10 +10,13 @@
  */
 class FakeDatabase {
 
+	public static $logging_enabled = true;
+
 	/**
 	 * @var String Absolute path to the database file
 	 */
 	protected $path;
+	
 
 	/**
 	 * @param String $path Absolute path to the database file
@@ -221,7 +224,9 @@ class FakeDatabase {
 	 * @param String $msg
 	 */
 	protected function log($msg) {
-		syslog(LOG_DEBUG, $msg);
+		if(self::$logging_enabled){
+			syslog(LOG_DEBUG, $msg);
+		}
 	}
 
 }
