@@ -1,68 +1,70 @@
 <?php
-class FakeObjectTest extends PHPUnit_Framework_TestCase {
 
-	public function testDefaults() {
-		$obj = new FakeObjectTest_ObjectWithDefault();
-		$this->assertEquals($obj->foo, 'default');
+namespace Chillu\FakeDatabase\Tests;
 
-		$objWithOverride = new FakeObjectTest_ObjectWithDefault(array('foo' => 'bar'));
-		$this->assertEquals($objWithOverride->foo, 'bar');
-	}
+use Chillu\FakeDatabase\FakeObject;
+use Chillu\FakeDatabase\Tests\Fixtures\FakeDBTestObject;
+use Chillu\FakeDatabase\Tests\Fixtures\FakeObjectTestWithDefaults;
+use PHPUnit\Framework\TestCase;
 
-	public function testToArray() {
-		$obj = new FakeObjectTest_Object(array(
-			'foo' => 'bar',
-			'relation' => array(new FakeObjectTest_Object(array('bar' => 'baz')))
-		));
+class FakeObjectTest extends TestCase
+{
 
-		$this->assertEquals(
-			$obj->toArray(),
-			array(
-				'foo' => 'bar',
-				'relation' => array(
-					array(
-						'bar' => 'baz',
-						'_type' => 'FakeObjectTest_Object'
-					)
-				),
-				'_type' => 'FakeObjectTest_Object'
-			)
-		);
-	}
+    public function testDefaults()
+    {
+        $obj = new FakeObjectTestWithDefaults();
+        $this->assertEquals($obj->foo, 'default');
 
-	public function testFromArray() {
-		$arr = array(
-			'_type' => 'FakeObjectTest_Object',
-			'foo' => 'bar',
-			'hasOne' => array(
-				'_type' => 'FakeObjectTest_Object',
-				'hasOneProp' => 'baz',
-			),
-			'hasMany' => array(
-				array(
-					'_type' => 'FakeObjectTest_Object',
-					'hasManyProp' => 'baz',
-				)
-			),
-			'bar' => 'baz'
-		);
-		$obj = FakeObject::create_from_array($arr);
-		$this->assertNotNull($obj);
-		$this->assertInstanceOf('FakeObjectTest_Object', $obj);
-		$this->assertInstanceOf('FakeObjectTest_Object', $obj->hasOne);
-		$this->assertInstanceOf('FakeObjectTest_Object', $obj->hasMany[0]);
-		$this->assertEquals($obj->bar, 'baz');
-		$this->assertEquals('baz', $obj->hasOne->hasOneProp);
-		$this->assertEquals('baz', $obj->hasMany[0]->hasManyProp);
-	}
+        $objWithOverride = new FakeObjectTestWithDefaults(array('foo' => 'bar'));
+        $this->assertEquals($objWithOverride->foo, 'bar');
+    }
 
-}
+    public function testToArray()
+    {
+        $obj = new FakeDBTestObject(array(
+            'foo' => 'bar',
+            'relation' => array(new FakeDBTestObject(array('bar' => 'baz')))
+        ));
 
-class FakeObjectTest_Object extends FakeObject {
-}
+        $this->assertEquals(
+            $obj->toArray(),
+            array(
+                'foo' => 'bar',
+                'relation' => array(
+                    array(
+                        'bar' => 'baz',
+                        '_type' => FakeDBTestObject::class
+                    )
+                ),
+                '_type' => FakeDBTestObject::class
+            )
+        );
+    }
 
-class FakeObjectTest_ObjectWithDefault extends FakeObject {
-	public function getDefaults() {
-		return array('foo' => 'default');
-	}
+    public function testFromArray()
+    {
+        $arr = array(
+            '_type' => FakeDBTestObject::class,
+            'foo' => 'bar',
+            'hasOne' => array(
+                '_type' => FakeDBTestObject::class,
+                'hasOneProp' => 'baz',
+            ),
+            'hasMany' => array(
+                array(
+                    '_type' => FakeDBTestObject::class,
+                    'hasManyProp' => 'baz',
+                )
+            ),
+            'bar' => 'baz'
+        );
+        $obj = FakeObject::createFromArray($arr);
+        $this->assertNotNull($obj);
+        $this->assertInstanceOf(FakeDBTestObject::class, $obj);
+        $this->assertInstanceOf(FakeDBTestObject::class, $obj->hasOne);
+        $this->assertInstanceOf(FakeDBTestObject::class, $obj->hasMany[0]);
+        $this->assertEquals($obj->bar, 'baz');
+        $this->assertEquals('baz', $obj->hasOne->hasOneProp);
+        $this->assertEquals('baz', $obj->hasMany[0]->hasManyProp);
+    }
 }

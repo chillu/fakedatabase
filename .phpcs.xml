@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="Default">
+    <description>Code Sniffer ruleset for the chillu/fakedatabase module.</description>
+
+    <!-- Default command-line arguments -->
+    <arg name="report-full"/>
+    <arg name="report-source"/>
+    <arg name="report-summary"/>
+    <arg name="colors"/>
+    <arg value="spv"/>
+    
+    <!-- List of directories to scan when phpcs runs, if none are specified on the command line -->
+    <file>src/</file>
+    <file>tests/</file>
+
+
+    <!-- Scan for all violations of PSR-2 -->
+    <rule ref="PSR2" />
+</ruleset>
