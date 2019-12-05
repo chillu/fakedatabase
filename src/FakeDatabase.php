@@ -36,6 +36,10 @@ class FakeDatabase
      */
     protected function getData()
     {
+        if (!file_exists($this->path)) {
+            throw new LogicException(sprintf('FakeDatabase at %s no longer exists', $this->path));
+        }
+
         if (file_exists($this->path) && !is_readable($this->path)) {
             throw new LogicException(sprintf('FakeDatabase at %s is not readable', $this->path));
         }
